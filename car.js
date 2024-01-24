@@ -10,6 +10,7 @@ class Car{
         this.maxSpeed = 3;
         this.friction = 0.05;
         this.angle = 0;
+        this.damaged = false;
 
 
         this.sensor = new Sensor(this);
@@ -19,7 +20,17 @@ class Car{
     update(roadBorders){
        this.#move();
        this.polygon=this.#createPolygon();
+       this.damaged=this.#assessDamage(roadBorders);
        this.sensor.update(roadBorders);
+    }
+
+    #assessDamage(roadBorders){
+        for (let i = 0; i < roadBorders.length; i++) {
+            if(polysIntersect(this.polygon, roadBorders[i])){
+                return true;
+            }
+        }
+        return false;
     }
 
     #createPolygon(){
@@ -27,8 +38,8 @@ class Car{
         const rad=Math.hypot(this.width,this.height)/2;
         const alpha= Math.atan2(this.width,this.height);
         points.push({
-            x:this.x-Math.sin(this.angle-alpha)*rad,
-            y:this.y-Math.cos(this.angle-alpha)*rad
+            x:this.x-Math.sin(this.angle-alpha)*rad*3,
+            y:this.y-Math.cos(this.angle-alpha)*rad*3
         });
         points.push({
             x:this.x-Math.sin(this.angle+alpha)*rad,
@@ -90,6 +101,11 @@ class Car{
         
     }
     draw(context){
+        if(this.damaged){
+            ctx.fillStyle="gray";
+        }else{
+            ctx.fillStyle="black";
+        }
         ctx.beginPath();
         ctx.moveTo(this.polygon[0].x, this.polygon[0].y);
         for (let i = 0; i < this.polygon.length; i++) {
