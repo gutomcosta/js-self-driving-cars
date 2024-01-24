@@ -18,10 +18,12 @@ class Car{
     }
 
     update(roadBorders){
-       this.#move();
-       this.polygon=this.#createPolygon();
-       this.damaged=this.#assessDamage(roadBorders);
-       this.sensor.update(roadBorders);
+        if(!this.damaged){
+            this.#move();
+            this.polygon=this.#createPolygon();
+            this.damaged=this.#assessDamage(roadBorders);
+        }
+        this.sensor.update(roadBorders);
     }
 
     #assessDamage(roadBorders){
@@ -38,8 +40,8 @@ class Car{
         const rad=Math.hypot(this.width,this.height)/2;
         const alpha= Math.atan2(this.width,this.height);
         points.push({
-            x:this.x-Math.sin(this.angle-alpha)*rad*3,
-            y:this.y-Math.cos(this.angle-alpha)*rad*3
+            x:this.x-Math.sin(this.angle-alpha)*rad,
+            y:this.y-Math.cos(this.angle-alpha)*rad
         });
         points.push({
             x:this.x-Math.sin(this.angle+alpha)*rad,
