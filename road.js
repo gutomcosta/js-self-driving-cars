@@ -25,8 +25,7 @@ class Road{
 
     getLaneCenter(laneIndex){
         const laneWith = this.width/this.laneCount;
-        return this.left+laneWith/2+
-        Math.min(laneIndex,this.laneCount-1)*laneWith;
+        return this.left+laneWith/2+Math.min(laneIndex,this.laneCount-1)*laneWith;
     }
 
     draw(ctx){
