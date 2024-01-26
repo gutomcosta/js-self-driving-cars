@@ -15,7 +15,7 @@ if (localStorage.getItem("bestBrain")){
             localStorage.getItem("bestBrain")
         )    
         if (i!=0){
-            NeuralNetwork.mutate(cars[i].brain,0.1);
+            NeuralNetwork.mutate(cars[i].brain,0.3);
         }
     }
 }
@@ -51,7 +51,7 @@ function animate(time){
         cars[i].update(road.borders, traffic);    
     }
     
-    const bestCar = cars.find(
+    bestCar = cars.find(
         c=>c.y==Math.min(
             ...cars.map(c=>c.y)
         )
