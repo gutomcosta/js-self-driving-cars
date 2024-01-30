@@ -17,6 +17,27 @@ class NeuralNetwork{
         return outputs;
     }
 
+    static crossover(parent1, parent2) {
+        const crossoverPoint = Math.floor(Math.random() * parent1.length);
+      
+        const child1 = [];
+        const child2 = [];
+      
+        // Copy genes up to the crossover point
+        for (let i = 0; i < crossoverPoint; i++) {
+          child1.push(parent1[i]);
+          child2.push(parent2[i]);
+        }
+      
+        // Swap genes after the crossover point
+        for (let i = crossoverPoint; i < parent1.length; i++) {
+          child1.push(parent2[i]);
+          child2.push(parent1[i]);
+        }
+      
+        return [child1, child2];
+      }
+
     static mutate(network, amount=1){
         network.levels.forEach(level => {
             for (let i = 0; i < level.biases.length; i++) {
@@ -36,6 +57,17 @@ class NeuralNetwork{
                 }
             }
         });
+    }
+
+    static buildChildren(brain1, brain2){
+        let newBrain = new NeuralNetwork([5,6,4]);     
+        for (let i = 0; i < newBrain.levels.length; i++) {
+            const childrenWeights = NeuralNetwork.crossover(brain1.levels[i].weights, brain2.levels[i].weights);
+            const childrenBiases = NeuralNetwork.crossover(brain1.levels[i].biases, brain2.levels[i].biases);
+            newBrain.levels[i].weights = childrenWeights;
+            newBrain.levels[i].biases  = childrenBiases;
+        }
+        return newBrain;
     }
 
 }

@@ -22,6 +22,16 @@ class Sensor{
         }
     }
 
+    hasCollisionIn(sensorIndexes){
+        let collisions = []
+        sensorIndexes.forEach(index => {
+            if (this.readings[index]){
+                collisions.push(this.readings[index]);
+            }
+        });
+        return collisions.length > 0;
+    }
+
     #getReadings(ray,roadBorders, traffic){
         let touches=[];
 

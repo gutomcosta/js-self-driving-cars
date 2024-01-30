@@ -23,6 +23,12 @@ class Car{
         this.controls = new Controls(controlType);
     }
 
+    getOffSets(){
+        const offsets=this.sensor.readings.map(
+            s=>s==null ? 0 : 1-s.offset
+        );
+        return offsets;
+    }
     update(roadBorders, traffic){
         if(!this.damaged){
             this.#move();
@@ -31,9 +37,7 @@ class Car{
         }
         if (this.sensor){
             this.sensor.update(roadBorders, traffic);
-            const offsets=this.sensor.readings.map(
-                s=>s==null ? 0 : 1-s.offset
-            );
+            const offsets= this.getOffSets();
             const outputs = NeuralNetwork.feedForward(offsets,this.brain);
             if (this.useBrain){
                 this.controls.forward = outputs[0];
@@ -43,6 +47,16 @@ class Car{
             }
 
         }
+        
+    }
+
+    fixDamage(){
+        this.damaged = false;
+    }
+
+    freeTrackAhead(){
+        const frontSensors = [1,2,3]
+        return ! this.sensor.hasCollisionIn(frontSensors);
         
     }
 
