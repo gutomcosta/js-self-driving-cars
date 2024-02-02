@@ -3,13 +3,16 @@ carCanvas.width =200;
 const networkCanvas = document.getElementById("networkCanvas");
 networkCanvas.width =300;
 
-const carCtx = carCanvas.getContext("2d");
-const networkCtx = networkCanvas.getContext("2d");
-const road = new Road(carCanvas.width/2, carCanvas.width*0.9);
-const N = 100;
-const cars = Cars.generateCars(N);
-let bestCars=[cars.list[0], cars.list[1]];
-
+function initialize(){
+    carCtx = carCanvas.getContext("2d");
+    networkCtx = networkCanvas.getContext("2d");
+    road = new Road(carCanvas.width/2, carCanvas.width*0.9);
+    N = 100;
+    cars = Cars.generateCars(N);
+    finishLine = new FinishLine(160,-2700);
+    bestCars=[cars.list[0], cars.list[1]];
+}
+initialize()
 if (localStorage.getItem("bestBrain")){
     for (let i = 0; i < cars.length; i++) {
         cars[i].brain=JSON.parse(
@@ -30,6 +33,8 @@ const traffic=[
     new Car(road.getLaneCenter(1),-700,30,50,"DUMMY", 2),
     new Car(road.getLaneCenter(2),-700,30,50,"DUMMY", 2)
 ]
+
+const lastTraffic = traffic[6];
 animate();
 
 function save(){
@@ -63,16 +68,8 @@ function animate(time){
     }
 
     cars.drawCars(carCtx,"blue")
-
-    if(traffic[6].y-300 < -2000) {
-        console.log("vai desenhafr");
-        carCtx.lineWidth = 10;
-        carCtx.strokeStyle = "Green";
-        carCtx.beginPath();
-        carCtx.moveTo(170,-2400);
-        carCtx.lineTo(35,-2400);
-        carCtx.stroke();
-    }
+    finishLine.draw(carCtx, lastTraffic);
+    
 
     carCtx.globalAlpha=1;
     bestCars[0].draw(carCtx, "blue",true);
@@ -80,6 +77,17 @@ function animate(time){
     carCtx.restore();
     networkCtx.lineDashOffset=-time/50;
     Visualizer.drawNetwork(networkCtx, bestCars[0].brain);
-    
-    requestAnimationFrame(animate);
+
+    if(! finishLine.limitExceeded){
+        requestAnimationFrame(animate);        
+    } else {
+        console.log("vai reiniciar");
+        initialize();
+        requestAnimationFrame(animate);        
+
+    }
+
+
 }
+
+
