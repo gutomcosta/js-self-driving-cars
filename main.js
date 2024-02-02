@@ -7,7 +7,7 @@ const carCtx = carCanvas.getContext("2d");
 const networkCtx = networkCanvas.getContext("2d");
 const road = new Road(carCanvas.width/2, carCanvas.width*0.9);
 const N = 100;
-const cars = generateCars(N);
+const cars = Cars.generateCars(N);
 let bestCars=[cars.list[0], cars.list[1]];
 
 if (localStorage.getItem("bestBrain")){
@@ -16,7 +16,7 @@ if (localStorage.getItem("bestBrain")){
             localStorage.getItem("bestBrain")
         )    
         if (i!=0){
-            NeuralNetwork.mutate(cars[i].brain,0.3);
+            NeuralNetwork.mutate(cars[i].brain, 0.3);
         }
     }
 }
@@ -41,21 +41,15 @@ function discard(){
     localStorage.removeItem("bestBrain");
 }
 
-function generateCars(N,y=100){
-    const cars = [];
-    for (let i = 0; i < N; i++) {
-        cars.push(new Car(road.getLaneCenter(1),y,30,50,"AI"));
-    }
-    return new Cars(cars);
-}
+
 
 function animate(time){
     for (let i = 0; i < traffic.length; i++) {
         traffic[i].update(road.borders,[]);
     }
     cars.updateCars(road.borders, traffic)
-    
     bestCars = cars.getBestCar();
+    
     carCanvas.height= window.innerHeight;
     networkCanvas.height = window.innerHeight;
 
@@ -69,6 +63,16 @@ function animate(time){
     }
 
     cars.drawCars(carCtx,"blue")
+
+    if(traffic[6].y-300 < -2000) {
+        console.log("vai desenhafr");
+        carCtx.lineWidth = 10;
+        carCtx.strokeStyle = "Green";
+        carCtx.beginPath();
+        carCtx.moveTo(170,-2400);
+        carCtx.lineTo(35,-2400);
+        carCtx.stroke();
+    }
 
     carCtx.globalAlpha=1;
     bestCars[0].draw(carCtx, "blue",true);

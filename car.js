@@ -23,6 +23,10 @@ class Car{
         this.controls = new Controls(controlType);
     }
 
+    isMoving(){
+        return this.speed > 0;
+    }
+
     getOffSets(){
         const offsets=this.sensor.readings.map(
             s=>s==null ? 0 : 1-s.offset

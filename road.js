@@ -43,6 +43,7 @@ class Road{
             ctx.moveTo(x, this.top);
             ctx.lineTo(x, this.bottom)
             ctx.stroke();
+      
         }
         ctx.setLineDash([]);
         this.borders.forEach(border =>{
@@ -51,7 +52,6 @@ class Road{
             ctx.lineTo(border[1].x, border[1].y);
             ctx.stroke();
         });
-
 
     }
 

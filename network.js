@@ -63,9 +63,9 @@ class NeuralNetwork{
         let newBrain = new NeuralNetwork([5,6,4]);     
         for (let i = 0; i < newBrain.levels.length; i++) {
             const childrenWeights = NeuralNetwork.crossover(brain1.levels[i].weights, brain2.levels[i].weights);
-            const childrenBiases = NeuralNetwork.crossover(brain1.levels[i].biases, brain2.levels[i].biases);
-            newBrain.levels[i].weights = childrenWeights;
-            newBrain.levels[i].biases  = childrenBiases;
+            // const childrenBiases = NeuralNetwork.crossover(brain1.levels[i].biases, brain2.levels[i].biases);
+            newBrain.levels[i].weights = childrenWeights[i];
+            // newBrain.levels[i].biases  = childrenBiases[i];
         }
         return newBrain;
     }
