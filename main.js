@@ -2,17 +2,15 @@ const carCanvas = document.getElementById("carCanvas");
 carCanvas.width =200;
 const networkCanvas = document.getElementById("networkCanvas");
 networkCanvas.width =300;
+carCtx = carCanvas.getContext("2d");
+networkCtx = networkCanvas.getContext("2d");
+road = new Road(carCanvas.width/2, carCanvas.width*0.9);
 
-function initialize(){
-    carCtx = carCanvas.getContext("2d");
-    networkCtx = networkCanvas.getContext("2d");
-    road = new Road(carCanvas.width/2, carCanvas.width*0.9);
-    N = 100;
-    cars = Cars.generateCars(N);
-    finishLine = new FinishLine(160,-2700);
-    bestCars=[cars.list[0], cars.list[1]];
-}
-initialize()
+N = 100;
+cars = Cars.generateCars(N);
+finishLine = new FinishLine(160,-2700);
+bestCars=[cars.list[0], cars.list[1]];
+
 if (localStorage.getItem("bestBrain")){
     for (let i = 0; i < cars.length; i++) {
         cars[i].brain=JSON.parse(
@@ -78,16 +76,15 @@ function animate(time){
     networkCtx.lineDashOffset=-time/50;
     Visualizer.drawNetwork(networkCtx, bestCars[0].brain);
 
-    if(! finishLine.limitExceeded){
-        requestAnimationFrame(animate);        
-    } else {
+    if(finishLine.limitExceeded){
         console.log("vai reiniciar");
-        initialize();
-        requestAnimationFrame(animate);        
-
+        cars = Cars.generateCars(100, bestCars[0].y);
+        cars.list.forEach(c => {
+            NeuralNetwork.mutate(c.brain, 0.3);
+        });
+        finishLine = new FinishLine(160, lastTraffic.y + (-300), 125, 700);
     }
-
-
+    requestAnimationFrame(animate);        
 }
 
 

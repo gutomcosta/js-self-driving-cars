@@ -1,8 +1,8 @@
 class FinishLine{
-    constructor(x, y, size=125, color="Green"){
+    constructor(x, y, size=125, separation=-700, color="Green"){
         this.x = x;
         this.y = y;
-        this.separation = -700
+        this.separation = separation
         this.limit = y - this.separation;
         this.limitExceeded = false;
         this.size = size;
@@ -18,5 +18,9 @@ class FinishLine{
             carCtx.stroke();
         }
         this.limitExceeded = (car.y < this.limit);
+    }
+
+    restart(){
+        this.limitExceeded = false;
     }
 }
